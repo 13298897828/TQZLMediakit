@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 // ZLMediaKitClient 是 ZLMediaKit 的客户端
@@ -105,9 +107,34 @@ func (c *ZLMediaKitClient) PlaybackHLS(app, stream string) (string, error) {
 	return c.GetHLSPullURL(app, stream), nil
 }
 
+// 读取配置文件
+func loadConfig() error {
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath("config")
+
+	err := viper.ReadInConfig()
+	if err != nil {
+		return fmt.Errorf("读取配置文件失败: %v", err)
+	}
+
+	fmt.Println("配置文件读取成功")
+	return nil
+}
+
 func main() {
-	// 示例用法
-	client := NewZLMediaKitClient("http://127.0.0.1:8080", 30*time.Second)
+	// 加载配置文件
+	if err := loadConfig(); err != nil {
+		fmt.Printf("加载配置文件失败: %v\n", err)
+		return
+	}
+
+	// 获取配置
+	baseURL := viper.GetString("server.base_url")
+	timeout := time.Duration(viper.GetInt("server.timeout")) * time.Second
+
+	// 创建 ZLMediaKit 客户端
+	client := NewZLMediaKitClient(baseURL, timeout)
 
 	// 获取流列表
 	streams, err := client.GetStreamList()

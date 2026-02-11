@@ -8,6 +8,7 @@
 - 获取指定流的详细信息
 - 生成 HLS 拉流地址
 - 播放 HLS 流
+- 配置文件支持
 
 ## 安装和使用
 
@@ -18,27 +19,35 @@ git clone https://github.com/13298897828/TQZLMediakit.git
 cd TQZLMediakit
 ```
 
-### 2. 配置
+### 2. 安装依赖
 
-修改 `main.go` 中的 `BaseURL` 为您的 ZLMediaKit 服务器地址：
-
-```go
-func main() {
-    // 示例用法
-    client := NewZLMediaKitClient("http://127.0.0.1:8080", 30*time.Second)
-    // ...
-}
+```bash
+go mod tidy
 ```
 
-### 3. 运行
+### 3. 配置
+
+修改 `config/config.yaml` 中的配置：
+
+```yaml
+# ZLMediaKit 配置文件
+server:
+  # ZLMediaKit 服务器地址
+  base_url: "http://127.0.0.1:8080"
+  # 请求超时时间（秒）
+  timeout: 30
+```
+
+### 4. 运行
 
 ```bash
 go run main.go
 ```
 
-### 4. 输出示例
+### 5. 输出示例
 
 ```
+配置文件读取成功
 当前流列表: 2 个
 App: live, Stream: test1, 在线时间: 3600 秒
 App: live, Stream: test2, 在线时间: 1800 秒
@@ -85,6 +94,7 @@ func (c *ZLMediaKitClient) PlaybackHLS(app, stream string) (string, error)
 ## 依赖
 
 - Go 1.21+
+- github.com/spf13/viper：用于读取配置文件
 - 网络连接到 ZLMediaKit 服务器
 
 ## 注意事项

@@ -1,0 +1,6 @@
+# ZLMediaKit 配置文件
+server:
+  # ZLMediaKit 服务器地址
+  base_url: "http://127.0.0.1:8080"
+  # 请求超时时间（秒）
+  timeout: 30
